@@ -1,0 +1,141 @@
+<?php
+//delete from  `drupal7`.`system` where name like 'kued_reminder'
+function kued_reminder_schema() {
+	$schema['kued_reminder'] = array(
+    'description' => t('The table that stores Reminder data.'),
+    'fields' => array(
+      'rid' => array(
+        'description' => t('The primary identifier for a Reminder entry.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'nid' => array(
+        'description' => t('The connected Node ID.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'channel_tid' => array(
+        'description' => t('The connected Channel taxonomy ID.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'program_id' => array(
+        'description' => t('The connected Program ID.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'reminder_time' => array(
+        'description' => t('The timestamp for when to send a reminder.'),
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0),
+      'airdate' => array(
+        'description' => t('The timestamp for when the show actually airs.'),
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0),
+      'message_type' => array(
+        'description' => t('Type of Reminder to be sent out, SMS or Email.'),
+        'type' => 'varchar',
+				'length' => 10,
+        'not null' => TRUE,
+        'default' => ''),
+      'email_address' => array(
+        'description' => t('Email address if the users has elected Email delivery'),
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => 0),
+      'mobile_number' => array(
+        'description' => t('Mobile Number if the user has elected SMS delivery.'),
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => 0),
+      'carrier' => array(
+        'description' => t('Mobile Number if the user has elected SMS delivery.'),
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0),
+      'comments' => array(
+        'description' => t('Any comments the user may have added.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'series_name' => array(
+        'description' => t('Name of the Series sent with the reminder.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'episode_name' => array(
+        'description' => t('Name of the Episode sent with the reminder.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'processed' => array(
+        'description' => t('Yes or No whether the form has sent or not.'),
+        'type' => 'varchar',
+        'length' => 1,
+        'not null' => TRUE,
+        'default' => 'N'),
+      ),
+
+    'unique keys' => array(
+      'rid'     => array('rid')
+      ),
+    'primary key' => array('rid'),
+    );
+	return $schema;
+}
+
+/**
+* Create new database table {kued_reminder_blocked}.
+*/
+function hook_update_7101(&$sandbox) {
+	// First we add the send record field.
+		$schema['kued_reminder_blocked'] = array(
+			'description' => t('List of blocked email addresses or phone numbers.'),
+			'fields' => array(
+				'block_id' => array(
+					'description' => t('The primary identifier for the blocked item.'),
+					'type' => 'serial',
+					'unsigned' => TRUE,
+					'not null' => TRUE),
+				'date_sent' => array(
+					'description' => t('Timestamp for when this block was added.'),
+					'type' => 'int',
+					'length' => 11,
+					'not null' => TRUE,
+					'default' => 0),
+        'email_address' => array(
+          'description' => t('Email address if the users has elected Email delivery'),
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+          'default' => 0),
+        'mobile_number' => array(
+          'description' => t('Mobile Number if the user has elected SMS delivery.'),
+          'type' => 'varchar',
+          'length' => 100,
+          'not null' => TRUE,
+          'default' => 0),
+				),
+			'unique keys' => array(
+				'block_id' => array('block_id')
+				),
+			'primary key' => array('block_id'),
+			);
+
+	db_create_table('kued_reminder_blocked', $schema['kued_reminder_blocked']);
+	return t('Reminder Blocked table added.');
+}
+

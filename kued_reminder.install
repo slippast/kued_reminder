@@ -1,5 +1,4 @@
 <?php
-//delete from  `drupal7`.`system` where name like 'kued_reminder'
 function kued_reminder_schema() {
 	$schema['kued_reminder'] = array(
     'description' => t('The table that stores Reminder data.'),

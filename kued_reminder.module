@@ -41,7 +41,9 @@ function kued_reminder_menu() {
     'weight' => 0,
     'file' => 'kued_reminder.admin.inc',
   );
+
 /*
+  // Future addition?
   $items['admin/config/content/kued/kued_reminder/blacklist'] = array(
     'title' => 'Black  List',
     'description' => t('Blacklist phone numbers and email addresses.'),
@@ -134,61 +136,39 @@ function kued_reminder_preprocess_node_episode(&$vars) {
 			$program_id = $vars['field_program_id']['value'];
 		} else {
 			$program_id = $vars['field_program_id'][$vars['language']][0]['value'];
-		}
-	
-	// Get this moment in time for the check query
-	$time = date('Y-m-d H:i:s', REQUEST_TIME);
-/*
-    // I may add an in-page popup at some point.  Probably not.
-	// Plug in popup Javascript
-	if ($path = libraries_get_path('popup')) {
-		drupal_add_js($path . '/jquery.popup.js');
-	}
-	// Plug in KUED's custom Javascript
-	if ($path = libraries_get_path('kued')) {
-		drupal_add_js($path . '/kued.js');
-	}
+	  }
+  
+    // Get this moment in time for the check query
+    $time = date('Y-m-d H:i:s', REQUEST_TIME);
+  
+    $reminder = 'Reminder';
+    $reminder_long = 'Schedule a reminder';
+    $reminder_past = 'Reminder For Future Airing';
+    $reminder_link = '/reminder/' . $vars['nid'] . '/' . $program_id;
+    // Javascript popup link:
+    $popup_link = 'onclick=\'window.open("' . $reminder_link . '","pagename","menubar=no,toolbar=no,width=500,height=650,scrollbars=yes,location=0,top=20,left=20");\'';
+    $popup_name = 'name=\'' . $vars['nid'] . '-' . $program_id . '\'';
+    $reminder_link = 'javascript:void(0)';
+  
+    $reminder_link_future = '<a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-future">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>';
+    $reminder_link_past = '<a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-past">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>';
+    
+    $reminder_link_future_icon = '<div class="reminder-icon episode-reminder"><a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-future"></a></div>';
+    $reminder_link_past_icon = '<div class="reminder-icon episode-reminder"><a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-past"></a></div>';
+  
+    $reminder_link_future_icon_text = '<div class="reminder-icon episode-reminder episode-reminder-text"><a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-text reminder-link-future"> ' . $reminder . '</a></div>';
+    $reminder_link_past_icon_text = '<div class="reminder-icon episode-reminder episode-reminder-text"><a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-text reminder-link-past"> ' . $reminder . '</a></div>';	
 
-  $vars['reminder_icon_light'] = '<img src="/sites/all/themes/kued-mobile/images/kued-icon-reminder.gif" title="Reminder icon for ' . $vars['title'] . '" />';
-  $vars['reminder_icon_dark'] = '<img src="/sites/all/themes/kued-mobile/images/kued-icon-reminder-dark.gif" title="Reminder icon for ' . $vars['title'] . '" />';
-  $vars['reminder_icon_gray'] = '<img src="/sites/all/themes/kued-mobile/images/kued-icon-reminder-gray.gif" title="Reminder icon for ' . $vars['title'] . '" />';
-  $reminder_icon_link_light = '<a href="/reminder/' . $program_id . '" title="' . $reminder . ' for ' . $vars['title'] .'" target="_blank">' . $vars['reminder_icon_light'] . '</a>';
-  $reminder_icon_link_dark = '<a href="/reminder/' . $program_id . '" title="' . $reminder . ' for ' . $vars['title'] .'" target="_blank">' . $vars['reminder_icon_dark'] . '</a>';
-  $reminder_icon_link_gray = '<a href="/reminder/' . $program_id . '" title="' . $reminder . ' for ' . $vars['title'] .'" target="_blank">' . $vars['reminder_icon_gray'] . '</a>';
-
-	$reminder_link_future = "<a onclick='MM_openCrWindow('" . $reminder_link . "','scrollbars=yes','430','400','true')\" href=\"javascript:void(0)\' title=\"' . $reminder . ' for ' . $vars['title'] .'\" class=\"reminder reminder-link reminder-link-future\">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>";
-	$reminder_link_past = '<a onclick="MM_openCrWindow("' . $reminder_link . '","popup1327374000_248171","scrollbars=yes","430","400","true")" href="javascript:void(0)" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-past">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>';
-*/
-
-	$reminder = 'Reminder';
-	$reminder_long = 'Schedule a reminder';
-	$reminder_past = 'Reminder For Future Airing';
-	$reminder_link = '/reminder/' . $vars['nid'] . '/' . $program_id;
-  // Javascript popup link:
-  $popup_link = 'onclick=\'window.open("' . $reminder_link . '","pagename","menubar=no,toolbar=no,width=500,height=650,scrollbars=yes,location=0,top=20,left=20");\'';
-  $popup_name = 'name=\'' . $vars['nid'] . '-' . $program_id . '\'';
-  $reminder_link = 'javascript:void(0)';
-
-	$reminder_link_future = '<a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-future">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>';
-	$reminder_link_past = '<a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-past">' . $reminder_long . ' for: <span>' . $vars['title'] .'</span></a>';
-	
-	$reminder_link_future_icon = '<div class="reminder-icon episode-reminder"><a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-future"></a></div>';
-	$reminder_link_past_icon = '<div class="reminder-icon episode-reminder"><a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-past"></a></div>';
-
-	$reminder_link_future_icon_text = '<div class="reminder-icon episode-reminder episode-reminder-text"><a ' . $popup_name . ' ' . $popup_link . ' href=\'' . $reminder_link . '\' title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-text reminder-link-future"> ' . $reminder . '</a></div>';
-	$reminder_link_past_icon_text = '<div class="reminder-icon episode-reminder episode-reminder-text"><a ' . $popup_name . ' ' . $popup_link . ' href="' . $reminder_link . '" title="' . $reminder . ' for ' . $vars['title'] .'" class="reminder reminder-link reminder-link-text reminder-link-past"> ' . $reminder . '</a></div>';	
-
-
-	// Check for future shows
-	$query = db_select('protrack_airlist')
-		->fields('protrack_airlist', array('fulldate'))
-		->condition('program_id', $program_id)
-		->condition('fulldate', $time, '>')
-		->orderBy('fulldate')
-		->execute();
-	$query_array = array(':pid' => $program_id);
-	// Find upcoming episodes
-	$check = db_query($query, $query_array)->fetchField();
+    // Check for future shows
+    $query = db_select('protrack_airlist')
+      ->fields('protrack_airlist', array('fulldate'))
+      ->condition('program_id', $program_id)
+      ->condition('fulldate', $time, '>')
+      ->orderBy('fulldate')
+      ->execute();
+    $query_array = array(':pid' => $program_id);
+    // Find upcoming episodes
+    $check = db_query($query, $query_array)->fetchField();
 
     if($check && isset($vars['show_start'])) {
       if($vars['show_start'] > REQUEST_TIME){
@@ -215,21 +195,12 @@ function kued_reminder_preprocess_node_episode(&$vars) {
       $vars['reminder_link_icon'] = $reminder_link_future_icon;
       $vars['reminder_link_icon_text'] = $reminder_link_future_icon_text;  
 	  }
-    }
+  }
 }
-
 
 /**
- * Shortcut function to build reminder links.
+ * Front End Display - User Interface
  */
-function kued_reminder_link_builder($vars) {
-
-}
-
-
-////////////////////////////////////////
-/// Front End Portion
-////////////////////////////////////////
 function kued_reminder_page($path, $nid, $pid) {
   // Check for valid arguments
   if (!is_numeric($nid) || !is_numeric($pid)) {
@@ -302,9 +273,7 @@ function kued_reminder_page($path, $nid, $pid) {
 
 /**
  * Implements hook_entity_info_alter().
- *
  * This enables a custom display just for the Reminder Page
- *
  */
 function kued_reminder_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['kued_reminder'] = array(
@@ -417,7 +386,6 @@ function email_kued_reminder_form($form, &$form_state, $collection) {
 	$form['close_link'] = array(
 		'#markup' => t('<div class="reminder-close-window button"><a href="javascript:self.close()">close this window</a></div>'),
 	);
-
   return $form;
 }
 
@@ -473,20 +441,20 @@ function email_kued_reminder_form_submit($form, &$form_state) {
 								form_set_error('values][addresses', t('There appears to be an invalid email address.  Please try again.'));
 								$error = TRUE;
 							}
-								// Build the record array.
-								$record[] = array (
-									'nid' =>  $nid,
-									'channel_tid' => $channel,
-									'program_id' => $pid,
-									'reminder_time' => $reminder_time,
-									'airdate' => $airdate,
-									'message_type' => $form_state['values']['type'],
-									'email_address' => $email_address,
-									'mobile_number' => $mobile_number,
-									'comments' => $form_state['values']['comments'],
-									'series_name' => $series_title,
-									'episode_name' => $episode_title,
-									);
+              // Build the record array.
+              $record[] = array (
+                'nid' =>  $nid,
+                'channel_tid' => $channel,
+                'program_id' => $pid,
+                'reminder_time' => $reminder_time,
+                'airdate' => $airdate,
+                'message_type' => $form_state['values']['type'],
+                'email_address' => $email_address,
+                'mobile_number' => $mobile_number,
+                'comments' => $form_state['values']['comments'],
+                'series_name' => $series_title,
+                'episode_name' => $episode_title,
+                );
 							$a++;
 						}
 					}
@@ -528,12 +496,14 @@ function email_kued_reminder_form_submit($form, &$form_state) {
 				->execute();
 		}
 	}
-
 	// Clean URL Argument style redirect here
 	drupal_goto('reminder/thank-you');
 }
 
-
+/**
+ * Implements hook_page().
+ * Reminder thank you page
+ */
 function thank_you_kued_reminder_page() {
   $items = array();
 	$items['#prefix'] = '<div id="reminder-summary" class="reminder-summary rounded" style="margin-top:20px;">';
@@ -543,16 +513,19 @@ function thank_you_kued_reminder_page() {
 	return $items;
 }
 
-
-//////////////////////////////
-/* Automation Portion       */
-//////////////////////////////
+/**
+ * Implements hook_cron().
+ * Automation Portion
+ */
 function kued_reminder_cron() {
 	// Add the reminder script to the cron
 	kued_reminder_automation();
 }
 
-// Send the emails and text messages
+/**
+ * Automation Portion
+ * Send the emails and text messages
+ */
 function kued_reminder_automation() {
 	// Setup email variables
   $module = 'kued_reminder';
@@ -617,7 +590,6 @@ function kued_reminder_automation() {
       }
 
       // Fix repeating titles
-      //if($item['episode_name'] == $item['series_name']) {
       if(strcasecmp($item['episode_name'], $item['series_name']) == 0) {
         $show_title = $item['episode_name'];
       } else {
@@ -628,7 +600,7 @@ function kued_reminder_automation() {
 		$message = drupal_mail($module, $key, $item['mailto'], $language, $params, $from, $send);
 		$message['subject'] = $subject;
 		$message['body'] = array();
-		//$message['body'][] = t('(KUED Program Reminder!)      ');
+		//$message['body'][] = t('(KUED Program Reminder!)      '); // This was messing up the text display for some users, fyi.
 		$message['body'][] = t('  @s airs on @a. It begins in @t!', array('@s' => $show_title, '@t' => $item['time_before_short'], '@a' => $item['airdate_readable']));
 		// Retrieve the responsible implementation for this message.
 		$system = drupal_mail_system($module, $key);
@@ -651,99 +623,10 @@ function kued_reminder_automation() {
   }
 }
 
-	//$query_array = array(':pid' => $pid);
-	//$result = db_query($query, $query_array);
-
-	//$items[] = array();
-	// Execute the query and build the search loop
-	//$result = db_query($query);
-
-  // Okay run the query
-  // Built the results list to display
-  /*	while($record = $result->fetchAssoc()) {
-    $reminder_group[] = $record;
-  }
-
-  dpm($reminder_group);
-
-	$a = 0;
-	while($items[$a] = $result->fetchAssoc()) {
-
-//dpm($items[$a]['email_address']);
-
-/*
-	// Get ready to send the reminder
-	$display_length = $items[$a]['airdate'] - REQUEST_TIME;
-	$display_length_array = kued_reminder_seconds_converstion($display_length);
-			$hours = $display_length_array['hours'];
-			$minutes = $display_length_array['minutes'];
-			$seconds = $display_length_array['seconds'];
-			if($hours > 0) { $hours = $hours . ' hour'; } elseif ($hours > 1) { $hours = $hours . ' hours'; } else { $hours = ''; }
-			if($minutes > 0) { $minutes = ' ' . $minutes . ' minutes'; } else { $minutes = ''; }
-			if($seconds > 0) { $seconds = ' ' . $seconds . ' seconds'; } else { $seconds = ''; }
-		$items[$a]['time_before'] = $hours.$minutes.$seconds;
-		$items[$a]['time_before_short'] = $hours.$minutes;
-
-		$items[$a]['reminder_time_readable'] = date('M jS Y, g:ia',$items[$a]['reminder_time']);
-		$items[$a]['airdate_readable'] = date('M jS Y, g:ia',$items[$a]['airdate']);
-
-		if($items[$a]['message_type'] == 'email_message') {
-			$items[$a]['mailto'] = $items[$a]['email_address'];
-		} elseif($items[$a]['message_type'] == 'text_message') {
-			$items[$a]['mailto'] = $items[$a]['mobile_number'];
-		}
-		$a++;
-	}
-
-	// Setup email variables
-  $module = 'kued_reminder';
-  $key = 'send';
-  $language = language_default();
-  $params = array();
-  $from = 'webmaster@kued.org';
-  $send = FALSE;
-	$subject = t('Reminder from KUED Channel 7');
-*/
-	// Cut the last value off the array
-	//$items = array_slice($items, 0, 1);
-	//dpm($items);
-
-/*
-	if($items['0'] != FALSE) {
-	  // Now display the stuff
-	  foreach($items as $item) {
-
-		// Setup message defaults, etc.		
-		$message = drupal_mail($module, $key, $item['mailto'], $language, $params, $from, $send);
-		$message['subject'] = $subject;
-		$message['body'] = array();
-		$message['body'][] = t('(KUED Program Reminder!)');
-		$message['body'][] = t('The episode of @s: @e starts in @t!', array('@e' => $item['episode_name'], '@s' => $item['series_name'], '@t' => $item['time_before_short']));
-
-		// Retrieve the responsible implementation for this message.
-		$system = drupal_mail_system($module, $key);
-
-		// Format the message body.
-		$message = $system->format($message);
-		if(!empty($message)) {
-			if ($system->mail($message)) {
-				// If email is successfully sent do this:
-				// Update the reminder to show that it's been sent
-				$update= db_update('kued_reminder')
-					->fields(array('processed' => 'Y'))
-					->condition('rid', $item['rid'], '=')
-					->execute();
-				}
-			}
-		}
-	}
-}
-*/
-
-///////////////////////////////
-/* General Functions Portion */
-///////////////////////////////
-// Options for reminder times
+/**
+ * Reusable Functions Portion
+ * Options for reminder times
+ */
 function kued_reminder_select_time() {
 	$time = array(
 	"900" => "15 Minutes",
@@ -756,6 +639,9 @@ function kued_reminder_select_time() {
 	return $time;
 }
 
+/**
+ * List of carriers for email to sms
+ */
 function kued_reminder_carriers() {
   // List of gateways:
   // http://martinfitzpatrick.name/list-of-email-to-sms-gateways/
@@ -780,7 +666,9 @@ function kued_reminder_carriers() {
 	return $carriers;
 }
 
-// Change the station back to the number
+/**
+ * Change the station back to the number
+ */
 function kued_reminder_station_number($station) {
 switch ($station) {
 	case 'KUED-HD':
@@ -812,7 +700,10 @@ switch ($station) {
 	}
 	return $station;
 }
-// Change the station back to the number
+
+/**
+ * Change the station back to the name
+ */
 function kued_reminder_station_name($station) {
 switch ($station) {
 	case '7.1':
@@ -834,7 +725,9 @@ switch ($station) {
 	return $station;
 }
 
-// Convert seconds into a readable format
+/**
+ * Convert seconds into a readable format
+ */
 function kued_reminder_seconds_converstion($time){
   if(is_numeric($time)){
     $value = array(
@@ -858,7 +751,7 @@ function kued_reminder_seconds_converstion($time){
       $time = ($time%60);
     }
     $value["seconds"] = floor($time);
-		//dpm($value);
+ 
     return (array) $value;
 
   } else {

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="kued_reminder.module" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132128690329868342" remote="132128690330000000" Dst="2" />
-<file name="kued_reminder.admin.inc" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132068238395700533" remote="132068238390000000" Dst="2" />
-<file name="kued_reminder.install" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="130608948620000000" remote="130608948620000000" Dst="2" />
+<file name="kued_reminder.admin.inc" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132162439531920136" remote="132162439530000000" Dst="2" />
+<file name="kued_reminder.info" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132162439969033088" remote="132162439970000000" Dst="2" />
+<file name="kued_reminder.install" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132162440186773125" remote="132162440190000000" Dst="2" />
+<file name="kued_reminder.module" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="132162445675752329" remote="132162445670000000" Dst="2" />
 <file name="kued_reminder.public.inc" server="gateway01.uen.org//web/rc-upld/wwwkued/sites/" local="130628925770000000" remote="130628925770000000" Dst="2" />
 </dwsync>
